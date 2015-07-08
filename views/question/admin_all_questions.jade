@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Questions
+
+  table.table.table-striped
+    thead
+      tr
+        th Title
+        th Due Date
+        th 
+    tbody
+      for question in questions
+        tr 
+          td
+            a(href='/admin/questions/#{question.id}')=question.title
+          td
+          td

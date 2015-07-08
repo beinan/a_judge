@@ -30,6 +30,10 @@ var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
 
+//a_judge controllers start
+var questionController = require('./controllers/question');
+//a_judge controllers end
+
 /**
  * API keys and Passport configuration.
  */
@@ -189,6 +193,23 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
   res.redirect('/api/venmo');
 });
 
+// routes for a_judge start
+app.use('/admin', passportConf.isAuthenticated, passportConf.isAdmin);
+
+app.route('/questions')
+  .get(questionController.getQuestions);
+  //.post(QuestionController.createQuestion)
+
+app.get('/admin/create_question', questionController.createQuestion);
+app.post('/admin/create_question', questionController.postCreateQuestion);
+app.get('/admin/questions/:id', questionController.adminQuestion);
+app.get('/admin/questions', questionController.adminAllQuestions);
+
+app.post('/admin/upload_test', questionController.uploadTestFile);
+app.post('/admin/add_grader', questionController.addGrader);
+
+
+// routes for a_judge end
 /**
  * Error Handler.
  */

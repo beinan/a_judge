@@ -12,6 +12,7 @@ pids
 logs
 results
 tmp
+uploads
 
 npm-debug.log
 node_modules
@@ -19,3 +20,5 @@ node_modules
 *.iml
 .DS_Store
 Thumbs.db
+
+*~

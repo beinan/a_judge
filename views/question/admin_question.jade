@@ -1,0 +1,65 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Modify a Question
+
+  form.form-horizontal(action='/admin/questions/new', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-2.control-label(for='question_title') Title
+      .col-sm-4
+        input.form-control(type='text', name='title', id='question_title', value='#{question.title}')
+    .form-group
+      label.col-sm-2.control-label(for='question_desc') Description
+      .col-sm-4
+        textarea.form-control(rows='5', name='desc', id='question_desc')
+          | #{question.desc}
+    .form-group
+      .col-sm-offset-2.col-sm-10
+        button.btn.btn-warning(type='submit') Save
+  
+  
+  form.form-horizontal(action='/admin/add_grader/', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    input(type='hidden', name='question_id', value=question._id)
+    .form-group
+      label.col-sm-2.control-label(for='question_code') Description
+      .col-sm-4
+        textarea.form-control(rows='25', name='code', id='question_code')
+          
+    .form-group
+      .col-sm-offset-2.col-sm-10
+        button.btn.btn-warning(type='submit') Upload
+    
+  #accordion.panel-group(role='tablist', aria-multiselectable='true')
+    .panel.panel-default
+      #headingOne.panel-heading(role='tab')
+        h4.panel-title
+          a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseOne', aria-expanded='true', aria-controls='collapseOne')
+            | Collapsible Group Item #1
+      #collapseOne.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='headingOne')
+        .panel-body
+  
+          form(action='/admin/upload_test/', method='POST', enctype='multipart/form-data')
+            input(type='hidden', name='_csrf', value=_csrf)
+            input(type='hidden', name='question_id', value=question._id)
+            .form-group
+              label.col-sm-2.control-label(for='upload_file') Test Suite File
+              .col-sm-4
+                input.form-control(type='file', name='file', id='upload_file')
+            
+            .form-group
+              .col-sm-offset-2.col-sm-10
+                button.btn.btn-warning(type='submit') Upload
+
+    .panel.panel-default
+      #headingTwo.panel-heading(role='tab')
+        h4.panel-title
+          a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseTwo', aria-expanded='true', aria-controls='collapseTwo')
+            | Collapsible Group Item #2
+      #collapseTwo.panel-collapse.collapse(role='tabpanel', aria-labelledby='headingTwo')
+        .panel-body
+          | BBB
+     
+    

@@ -7,13 +7,12 @@ html
     meta(name='csrf-token', content=_csrf)
     title #{title} - A Judge
     != css('main')
-  body
-    include partials/header
-
-    .container
-      include partials/flash
+  body.skin-blue.sidebar-mini
+    //include partials/header
+    #app_wrapper
+      
       block content
 
-    include partials/footer
+    //include partials/footer
 
     != js('application')

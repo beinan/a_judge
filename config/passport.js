@@ -408,6 +408,16 @@ exports.isAuthenticated = function(req, res, next) {
 };
 
 /**
+ * Admin required middleware
+ */
+exports.isAdmin = function(req, res, next) {
+  if(req.user && req.user.isAdmin === true)
+    next();
+  else
+    res.send(401, 'Unauthorized');
+}
+
+/**
  * Authorization Required middleware.
  */
 exports.isAuthorized = function(req, res, next) {

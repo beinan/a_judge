@@ -1,13 +1,10 @@
-![Alt](https://lh4.googleusercontent.com/-PVw-ZUM9vV8/UuWeH51os0I/AAAAAAAAD6M/0Ikg7viJftQ/w1286-h566-no/hackathon-starter-logo.jpg)
-Hackathon Starter [![Dependency Status](https://david-dm.org/sahat/hackathon-starter/status.svg?style=flat)](https://david-dm.org/sahat/hackathon-starter) [![Build Status](http://img.shields.io/travis/sahat/hackathon-starter.svg?style=flat)](https://travis-ci.org/sahat/hackathon-starter) [![Analytics](https://ga-beacon.appspot.com/UA-47447818-2/hackathon-starter?pixel)](https://github.com/igrigorik/ga-beacon)
-=======================
 
-[![Join the chat at https://gitter.im/sahat/hackathon-starter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sahat/hackathon-starter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+cd docker/cpp
+sudo docker build -t cppgrader .
 
-**Live Demo**: http://hackathonstarter.herokuapp.com
+docker run -v /home/bwang19/jbd/docker/cpp/hello.cpp:/hello.cpp:ro gcc:4.9 sh -c "g++ -o hello /hello.cpp; ./hello"
 
-Jump to [What's new in 3.0.3?](#changelog)
-
+Hackathon Starter
 A boilerplate for **Node.js** web applications.
 
 If you have attended any hackathons in the past, then you know how much time it takes to

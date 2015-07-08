@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Questions
+
+  ul.list-group
+    for question in questions
+      li.list-group-item 
+        span=question.title
