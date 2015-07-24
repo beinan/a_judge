@@ -32,6 +32,9 @@ var contactController = require('./controllers/contact');
 
 //a_judge controllers start
 var questionController = require('./controllers/question');
+var assignmentController = require('./controllers/assignment');
+var jobController = require('./controllers/job');
+
 //a_judge controllers end
 
 /**
@@ -85,6 +88,8 @@ app.use(lusca({
   xframe: 'SAMEORIGIN',
   xssProtection: true
 }));
+
+
 app.use(function(req, res, next) {
   res.locals.user = req.user;
   next();
@@ -98,7 +103,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 /**
  * Primary app routes.
  */
-app.get('/', homeController.index);
+app.get('/', passportConf.isAuthenticated, homeController.index);
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);
@@ -196,6 +201,11 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
 // routes for a_judge start
 app.use('/admin', passportConf.isAuthenticated, passportConf.isAdmin);
 
+app.get('/api/account', passportConf.isAuthenticated,userController.getAccountJson);
+app.get('/api/jobs/:id', passportConf.isAuthenticated, jobController.getJob);
+app.get('/api/assignments', passportConf.isAuthenticated, assignmentController.getAssignments);
+//app.get('/api/myjobs', passportConf.isAuthenticated, jobController.getJob);
+
 app.route('/questions')
   .get(questionController.getQuestions);
   //.post(QuestionController.createQuestion)
@@ -208,6 +218,9 @@ app.get('/admin/questions', questionController.adminAllQuestions);
 app.post('/admin/upload_test', questionController.uploadTestFile);
 app.post('/admin/add_grader', questionController.addGrader);
 
+//import Phil's legacy cpp grader
+app.post('/admin/import_cpp_grader', questionController.importCppGrader);
+app.get('/admin/api/jobs', jobController.allJobs);
 
 // routes for a_judge end
 /**
@@ -223,3 +236,8 @@ app.listen(app.get('port'), function() {
 });
 
 module.exports = app;
+
+
+//production configuration
+//http://www.hacksparrow.com/running-express-js-in-production-mode.html
+//production best practice:  http://blog.carbonfive.com/2014/06/02/node-js-in-production/

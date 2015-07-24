@@ -41,7 +41,7 @@ exports.postLogin = function(req, res, next) {
     req.logIn(user, function(err) {
       if (err) return next(err);
       req.flash('success', { msg: 'Success! You are logged in.' });
-      res.redirect(req.session.returnTo || '/');
+      res.redirect('/');
     });
   })(req, res, next);
 };
@@ -111,6 +111,17 @@ exports.getAccount = function(req, res) {
     title: 'Account Management'
   });
 };
+
+
+/**
+ * GET /account
+ * Profile page.
+ */
+exports.getAccountJson = function(req, res) {
+  var mask = require('json-mask');
+  res.json(mask(req.user, 'email,_id,isAdmin,profile'));
+};
+
 
 /**
  * POST /account/profile
