@@ -25,6 +25,6 @@ AppAction.setAppHeight($(window).height());
 $(window).resize(()=> AppAction.setAppHeight($(window).height()));
 
 import ViewType from './view_type';
-AppAction.setView(ViewType.QUESTION_VIEW);
+AppAction.setView(ViewType.ASSIGNMENT_VIEW);
 
 React.render( <Frame/>, document.getElementById('app_wrapper'));

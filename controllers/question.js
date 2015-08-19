@@ -4,7 +4,15 @@
 
 var Question = require('../models/Question.js');
 var Job = require('../models/Job.js');
+var Assignment = require('../models/Assignment.js');
+
 var shell = require('shelljs');
+
+var fsp = require('../job_processing/fs_promise');
+var path = require('path');
+var cpp_builder = require('../job_processing/cpp_build.js');
+var exec = require('../job_processing/shell_promise').exec;
+
 
 exports.getQuestions = function(req, res) {
   Question.find(
@@ -60,33 +68,72 @@ var util = require('util');
 var moment = require('moment');
    
 exports.importCppGrader = function(req, res){
-  console.log(req.body);
-  console.log(req.files);
-  var file = req.files.file;
+   var file = req.files.file;
   if(file){
-    var path = require('path');
-    var appDir = path.dirname(require.main.filename);    
-    
-    var user_folder = req.user.email.replace('@', '_at_') + '/';
-    //var datetime =
-    var date_folder = moment().format('YYYYMMDD_HHmmss') + '/';
-    var dest_folder = appDir + "/uploads/" + user_folder + date_folder;
-    var grader_dir = appDir + "/graders";
-    var compile_cmd = util.format("g++ -ggdb -DGRADE_SERVER -o CppGrader *.cpp -ldl -lpthread && cp CppGrader %s && echo \"CppGrader is ready!\"", grader_dir);
-    var reload_cmd = util.format("cd %s && ./CppGrader reload_assignments ", grader_dir);
-    var cmd = util.format("mkdir %s -p && cd %s && cp %s . && unzip %s && %s && %s", 
-                          dest_folder, dest_folder, file.path, file.name, compile_cmd, reload_cmd);
-    
-    //create a async job, #see worker.js
-    var promise = Job.create({cmd:cmd, owner: req.user._id, type: 'import_assignments'});
-    return promise.then(function(doc){ res.json({status:"ok", job_id:doc._id});});    
+    build_cpp_grader(file, req.user)
+      .then(function(count){
+        res.json({status:"success", msg: "Import succeeded, " + count + " assignments created or updated."});
+      })
+      .catch(function(err){
+        console.error(err);
+        res.status(500).json({status:"error", msg:err});
+      });    
   }else{
-    return req.json({err:'no file uploaded'});
+    res.json({status:"error", msg:'no file uploaded'});
   }   
  
 };
 
+function build_cpp_grader(file, owner){
+  var appDir = path.dirname(require.main.filename);    
+  
+  var user_folder = owner.email.replace('@', '_at_');
+  //var datetime =
+  var date_folder = moment().format('YYYYMMDD_HHmmss');
+  var dest_folder = path.join(appDir, "uploads", user_folder, date_folder);
+  var final_zip_filename = path.join(dest_folder, file.name);
+  var source_folder = path.join(dest_folder, 'src');
+  var output_filename = 'a.out';  //hardcode here and also in docker file
+  var grader_dir = path.join(appDir,"docker/phil");
+   
+  return fsp.mkdirp(source_folder)
+    .then(fsp.move.bind(null, file.path, final_zip_filename))  //move uploaded solution to the user's folder
+    .then(fsp.unzip.bind(null,final_zip_filename, source_folder))  //unzip file
+    .then(cpp_builder.buildCppGrader.bind(null, source_folder))
+    .then(fsp.move.bind(null, path.join(source_folder, "CppGrader"), path.join(grader_dir, "CppGrader"))) //mv cppgrader to grader folder
+    .then(exec.bind(null, "docker build -t cppgrader .", {cwd:grader_dir}))  //rebuild docker image
+    .then(exec.bind(null, "./CppGrader reload_assignments", {cwd: grader_dir})) //generate assignment xml information
+    .then(parseXmlString) //create assignment to db
+  ;
+}
 
+var parseString = require('xml2js').parseString;
+function parseXmlString(xml){
+  return new Promise(
+    function(resolve, reject){
+      parseString(xml, function (err, result) {
+        var i;
+        for(i = 0; i < result.root.assigns[0].assign.length; i++){
+          var assign = result.root.assigns[0].assign[i];
+          var questions = [];
+          for(var q = 0; q < assign.questions[0].question.length; q++){
+            var question = assign.questions[0].question[q];
+            questions.push({num: parseInt(question.qnum[0]), points:parseInt(question.points[0]), desc: question.desc[0]});
+          }
+          Assignment.findOneAndUpdate({assign_num: assign.assign_num[0]}, {$set: {testcases:questions}}, {upsert: true, new:true})
+            .exec(function(err, doc){
+              if(err)
+                reject(error);
+              else
+                console.log("assignmnt created or updated:", doc);
+            });
+          //Assignment.create({title: assign.assign_num[0], testcases: questions});
+        }
+        return resolve(i);
+      });
+    }
+  );
+}
 exports.addGrader = function(req, res){
   console.log(req.body.code);
   var question_id = req.body.question_id;

@@ -22,7 +22,7 @@ var userSchema = new mongoose.Schema({
     website: { type: String, default: '' },
     picture: { type: String, default: '' }
   },
-
+  //grades: [{assignment  : { type: ObjectId, ref: 'Assignment' }, score:Number, runtime: Number, bonus:Number, late_fee: Number}],
   resetPasswordToken: String,
   resetPasswordExpires: Date
 });

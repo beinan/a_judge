@@ -1,15 +1,27 @@
 var secrets = require('./config/secrets');
 var mongoose = require('mongoose');
 
-var Job = require('./models/Job.js');
+//var Job = require('./models/Job.js');
 
-var process_job = require('./job_processing/job_processor');
+
+var User = require('./models/User.js');
+
+var Assignment = require('./models/Assignment.js');
+
+var Submission = require('./models/Submission.js');
+
+var cpp_builder = require('./job_processing/cpp_build');
 
 function reduce() {
-  Job.findOneAndUpdate({status:"new"}, {$set: {status:"processing"}}, {sort: {_id:1}}).exec(
+  Submission.findOneAndUpdate({status:"new"}, {$set: {status:"processing"}}, {sort: {_id:1}}).populate('owner', 'email').populate('assignment').exec(
     function(err, doc){
       if(doc){
-        process_job(doc).then(function(){
+        cpp_builder.grade(doc).then(function(){
+          reduce();
+        }).catch(function(err){
+          console.log(err);
+          doc.status = "error";
+          doc.save();
           reduce();
         });
         

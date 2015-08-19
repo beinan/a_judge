@@ -35,7 +35,7 @@ export class ContentBox extends React.Component{
           <span className="label label-primary pull-right"><i className="fa fa-html5"></i></span>
         </div>
         <div className="box-body">
-          {this.props.content}
+          {this.props.children} {this.props.content}
         </div>
       </div>
     );
@@ -108,12 +108,14 @@ export class UploadFileForm extends React.Component{
       processData: false
     }).then(
       (data) => { //ajax request successed
-        this.setState({status: 'success', msg: "Upload success."}); 
+        this.setState({status: 'success', msg: "Upload succeeded."}); 
         console.log("upload successful",data);
         this.setState({job_id: data.job_id});
       },
-      (jqXHR, textStatus, errorThrown) => { //ajax request failed
-        this.setState({status:'error', msg:"Error" + errorThrown});
+      (jqXHR, textStatus, errorThrown) => { 
+        //ajax request failed
+        console.log(jqXHR, textStatus, errorThrown);          
+        this.setState({status:'error', msg:jqXHR.responseJSON.msg});
       }
     );
   }

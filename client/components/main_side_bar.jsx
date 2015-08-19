@@ -81,26 +81,26 @@ class MainSideBar extends React.Component{
     var sideBarMenu = null;
     var admin_menus = [];
     if(this.state.status !== "init"){
-      console.log("hey", this.state);
       userPanel = (<div className="user-panel">
             <div className="pull-left image">
               <img src="/images/user2.jpg" className="img-circle" alt="User Image" />
             </div>
             <div className="pull-left info">
               <p>{this.state.email}</p>
-              <a href="#"><i className="fa fa-circle text-success"></i> Online</a>
+              <a href="/account"><i className="fa fa-circle text-success"></i> Online</a>
             </div>
           </div>);
-      admin_menus = [
+      admin_menus = this.state.isAdmin?[
         <li className="header" key="admin_menu_section">Admin Menu</li>, 
         <MenuItem key="admin_questions" view_name={ViewType.ADMIN_QUESTION_VIEW} title="Admin Questions" />,
         <MenuItem key="admin_monitor" view_name={ViewType.ADMIN_MONITOR_VIEW} title="Monitor" />
-      ]
+      ]:null
       sideBarMenu = (
           <ul className="sidebar-menu">
             <li className="header" key="main_menu_section">Main Menu</li>
             <MenuItem view_name={ViewType.ASSIGNMENT_VIEW} title="Assignments" />
-            <MenuItem view_name={ViewType.USER_GRADE_VIEW} title="My Grades" />
+            <MenuItem view_name={ViewType.STUDENT_SUBMISSION_VIEW} title="My Submissions" />
+            <MenuItem view_name={ViewType.STUDENT_GRADE_VIEW} title="My Grades" />
                         
             {admin_menus}    
           </ul>

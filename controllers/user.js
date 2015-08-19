@@ -6,6 +6,37 @@ var passport = require('passport');
 var User = require('../models/User');
 var secrets = require('../config/secrets');
 
+
+exports.allUsers = function(req, res) {
+  User.find({}, {email:1, profile:1, isAdmin:1}).sort({email : 1}).skip(req.query.start).limit(req.query.page_size).exec(
+    function(err, docs){
+      res.json(docs);
+    }
+  );        
+};
+
+exports.promote = function(req, res) {
+  User.update({_id:req.params.id}, {$set:{isAdmin:true}}).exec(
+    function(err, result){
+      if(err)
+        res.status(500).json(err);
+      else
+        res.json(result);
+    }
+  );        
+};
+
+exports.demote = function(req, res) {
+  User.update({_id:req.params.id}, {$set:{isAdmin:false}}).exec(
+    function(err, result){
+      if(err)
+        res.status(500).json(err);
+      else
+        res.json(result);
+    }
+  );        
+};
+
 /**
  * GET /login
  * Login page.

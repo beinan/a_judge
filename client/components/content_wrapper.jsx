@@ -4,17 +4,17 @@ import AppStore from '../stores/app_store'
 
 import ViewType from '../view_type.js'
 
-import SignUpView from './sign_up_view.jsx'
-import UserGradeView from './user_grade_view.jsx'
 import AdminQuestionView from './admin/admin_question_view.jsx'
 import AdminMonitorView from './admin/admin_monitor_view.jsx'
 
-import AssignmentView from './assignment_view.jsx'
+import AssignmentView from './student_views/assignment_view.jsx'
+import StudentGradeView from './student_views/student_grade_view.jsx'
+import StudentSubmissionView from './student_views/student_submission_view.jsx'
 
 var view_map = {
   [ViewType.ASSIGNMENT_VIEW]: <AssignmentView/>,
-  [ViewType.QUESTION_VIEW]: <SignUpView/>,
-  [ViewType.USER_GRADE_VIEW]: <UserGradeView/>,
+  [ViewType.STUDENT_GRADE_VIEW]: <StudentGradeView/>,
+  [ViewType.STUDENT_SUBMISSION_VIEW]: <StudentSubmissionView/>,
   [ViewType.ADMIN_QUESTION_VIEW]: <AdminQuestionView/>,
   [ViewType.ADMIN_MONITOR_VIEW]: <AdminMonitorView/>
 

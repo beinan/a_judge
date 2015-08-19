@@ -34,7 +34,7 @@ var contactController = require('./controllers/contact');
 var questionController = require('./controllers/question');
 var assignmentController = require('./controllers/assignment');
 var jobController = require('./controllers/job');
-
+var submissionController = require('./controllers/submission');
 //a_judge controllers end
 
 /**
@@ -202,25 +202,34 @@ app.get('/auth/venmo/callback', passport.authorize('venmo', { failureRedirect: '
 app.use('/admin', passportConf.isAuthenticated, passportConf.isAdmin);
 
 app.get('/api/account', passportConf.isAuthenticated,userController.getAccountJson);
-app.get('/api/jobs/:id', passportConf.isAuthenticated, jobController.getJob);
+app.get('/admin/api/assignments', passportConf.isAuthenticated, assignmentController.allAssignments);
 app.get('/api/assignments', passportConf.isAuthenticated, assignmentController.getAssignments);
+
 //app.get('/api/myjobs', passportConf.isAuthenticated, jobController.getJob);
 
-app.route('/questions')
-  .get(questionController.getQuestions);
-  //.post(QuestionController.createQuestion)
-
-app.get('/admin/create_question', questionController.createQuestion);
-app.post('/admin/create_question', questionController.postCreateQuestion);
-app.get('/admin/questions/:id', questionController.adminQuestion);
-app.get('/admin/questions', questionController.adminAllQuestions);
 
 app.post('/admin/upload_test', questionController.uploadTestFile);
 app.post('/admin/add_grader', questionController.addGrader);
 
 //import Phil's legacy cpp grader
 app.post('/admin/import_cpp_grader', questionController.importCppGrader);
+app.post('/admin/update_assign', assignmentController.update);
+
+app.post('/upload_solution/:assign_num', passportConf.isAuthenticated, submissionController.upload);
+
+app.get('/admin/regrade/:id', submissionController.regrade);
+ 
+app.get('/admin/promote/:id', userController.promote);
+ 
+app.get('/admin/demote/:id', userController.demote);
+
+
 app.get('/admin/api/jobs', jobController.allJobs);
+app.get('/admin/api/submissions', submissionController.allSubmissions);
+app.get('/admin/api/users', userController.allUsers);
+app.get('/api/submissions', submissionController.mySubmissions);
+app.get('/api/grades', submissionController.myGrades);
+
 
 // routes for a_judge end
 /**
