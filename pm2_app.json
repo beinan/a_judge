@@ -5,9 +5,7 @@
       "name"        : "worker",
       "script"      : "worker.js",
       "env": {
-        "NODE_ENV": "production",
-        "PORT" : 13000,
-        "DUP_CHECKING": false
+        "NODE_ENV": "production"        
       }
     },
     {
@@ -19,7 +17,9 @@
       "out_file"   : "./logs/service-out.log",
       "pid_file"   : "./service.pid",
       "env" : {
-        "NODE_ENV" : "production"
+        "NODE_ENV" : "production",
+        "PORT" : 13000,
+        "DUP_CHECKING": false
       }
     }
   ]
