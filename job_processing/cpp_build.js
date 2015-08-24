@@ -44,6 +44,9 @@ exports.grade = function(submission){
           //finished
           submission.status = "finished";
           submission.final_score = submission.total_score - submission.late_fee + submission.bonus;     
+          if(submission.final_score < 0){
+            submission.final_score = 0;
+          }
           submission.save(function(err){
             if(err)
               reject(err);

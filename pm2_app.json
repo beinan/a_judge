@@ -1,0 +1,26 @@
+{ 
+  "apps" : 
+  [
+    {
+      "name"        : "worker",
+      "script"      : "worker.js",
+      "env": {
+        "NODE_ENV": "production",
+        "PORT" : 13000,
+        "DUP_CHECKING": false
+      }
+    },
+    {
+      "name"       : "service",
+      "script"     : "app.js",
+      "instances"  : 4,
+      "exec_mode"  : "cluster",
+      "error_file" : "./logs/service-err.log",
+      "out_file"   : "./logs/service-out.log",
+      "pid_file"   : "./service.pid",
+      "env" : {
+        "NODE_ENV" : "production"
+      }
+    }
+  ]
+}
