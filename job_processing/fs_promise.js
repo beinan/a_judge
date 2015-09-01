@@ -41,8 +41,15 @@ exports.unzip = function(zip_filename, dest_folder){
           var fileName = entry.path;
           var type = entry.type; // 'Directory' or 'File'
           var size = entry.size;
-          if (fileName && type == "File") {
+          if (fileName) {
             console.log(fileName);
+            if(type != "File"){
+              reject("You cannot contain sub-folder in your zip file.");
+              return;
+            }else if(path.extname(fileName) != ".cpp" && path.extname(fileName) != ".h"){
+              reject("You cannot contain files other than '*.cpp' and '*.h'");
+              return;
+            }
             filename_list.push(fileName);
             entry.pipe(fs.createWriteStream(path.join(dest_folder, fileName)));
           } else {
