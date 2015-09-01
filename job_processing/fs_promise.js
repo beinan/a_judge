@@ -41,7 +41,7 @@ exports.unzip = function(zip_filename, dest_folder){
           var fileName = entry.path;
           var type = entry.type; // 'Directory' or 'File'
           var size = entry.size;
-          if (fileName) {
+          if (fileName && type == "File") {
             console.log(fileName);
             filename_list.push(fileName);
             entry.pipe(fs.createWriteStream(path.join(dest_folder, fileName)));
