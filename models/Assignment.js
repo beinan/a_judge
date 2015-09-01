@@ -6,7 +6,8 @@ var assignmentSchema = new mongoose.Schema({
   desc: String,
   isPublic: Boolean,
   testcases: [{ num: Number, points: Number, desc:String }],
-  date: { type: Date, default: Date.now }
+  date: { type: Date, default: Date.now },
+  skeleton_path: String
 });
 
 var Assignment = mongoose.model('Assignment', assignmentSchema);

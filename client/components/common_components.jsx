@@ -91,7 +91,7 @@ export class UploadFileForm extends React.Component{
   constructor(props){
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.state = {status:"success", msg:'Upload your test cases.'}; //init with 'success' status.
+    this.state = {status:"success", msg:'Upload your file.'}; //init with 'success' status.
   }
   
 

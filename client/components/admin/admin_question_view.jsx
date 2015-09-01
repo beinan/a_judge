@@ -6,6 +6,7 @@ import {ContentSection, ContentBox, UploadFileForm} from '../common_components.j
 import CommonSection from '../commons/common_section.jsx'
 import CommonListBox from '../commons/common_list_box.jsx'
 
+
 import CommonAction from '../../actions/common_action'
 
 import {Button, Label, Input, Modal} from 'react-bootstrap'
@@ -69,11 +70,18 @@ class AdminQuestionView extends React.Component{
             <Input type='text' style={{color:"black"}} defaultValue={this.state.currentAssign?moment(this.state.currentAssign.date).format():""} ref='due_date_input' label='Due Date'/>
             <Input type='checkbox' label='Public' defaultChecked={this.state.currentAssign?this.state.currentAssign.isPublic:false} ref="is_pub_input"/> 
             <Input type='textarea' style={{color:"black"}} defaultValue={this.state.currentAssign?this.state.currentAssign.desc:""} ref='desc_input' label='Description'/>
+            <Button bsStyle='primary' onClick={save_assignment}>Save changes</Button>
+            <UploadFileForm title="Upload code skeleton." 
+                            desc="The code skeleton has to be packed as a zip file."
+                            url = {'/admin/upload_skeleton/' + (this.state.currentAssign ? this.state.currentAssign.assign_num:"")}
+            />        
+
+
           </Modal.Body>
 
           <Modal.Footer>
             <Button onClick={()=>this.setState({showModal:false})}>Close</Button>
-            <Button bsStyle='primary' onClick={save_assignment}>Save changes</Button>
+            
           </Modal.Footer>
 
         </Modal>

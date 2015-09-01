@@ -214,6 +214,9 @@ app.post('/admin/add_grader', questionController.addGrader);
 //import Phil's legacy cpp grader
 app.post('/admin/import_cpp_grader', questionController.importCppGrader);
 app.post('/admin/update_assign', assignmentController.update);
+app.post('/admin/upload_skeleton/:assign_num', assignmentController.uploadSkeleton);
+app.get('/download_skeleton/:assign_num', assignmentController.downloadSkeleton);
+
 
 app.post('/upload_solution/:assign_num', passportConf.isAuthenticated, submissionController.upload);
 

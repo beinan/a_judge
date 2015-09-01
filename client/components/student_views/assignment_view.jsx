@@ -38,6 +38,8 @@ class AssignmentView extends React.Component{
             <dl>
               <dt>Description</dt>
               <dd dangerouslySetInnerHTML={{__html:marked(this.state.currentAssign.desc)}}></dd>
+              <dt>Skeleton</dt>
+              <dd><a href={"/download_skeleton/" + this.state.currentAssign.assign_num}>Download Skeleton</a></dd>
               
               <dt>Submit your solution</dt>
               <dd>
