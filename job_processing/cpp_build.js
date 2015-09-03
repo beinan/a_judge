@@ -64,7 +64,8 @@ exports.grade = function(submission){
       submission.bonus = 0;
       var timediff = submission.date.getTime() - submission.assignment.date.getTime();
       if(timediff > 0){
-        submission.late_fee = Math.ceil(timediff / (1000 * 60 * 60 * 24)) * 5; //TODO: this should be configurable
+        //using floor, because 24 hours policy(no late fee in the first 24 hours)
+        submission.late_fee = Math.floor(timediff / (1000 * 60 * 60 * 24)) * 5; //TODO: this should be configurable
       }
       reduce(0); //start grading each testcases one by one
     }
