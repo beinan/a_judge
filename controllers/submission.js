@@ -114,7 +114,7 @@ function build_user_solution(file, assignment, owner){
   var output_filename = 'a.out';  //hardcode here and also in docker file
   return fsp.mkdirp(build_folder)
     .then(fsp.move.bind(null, file.path, final_zip_filename))  //move uploaded solution to the user's folder
-    .then(fsp.unzip.bind(null,final_zip_filename, source_folder))  //unzip file
+    .then(fsp.unzipSource.bind(null,final_zip_filename, source_folder))  //unzip file
     .then(function(filename_list){  //build
       //console.log(filename_list);  
       return cpp_builder.build(filename_list, source_folder, build_folder, output_filename);

@@ -43,6 +43,38 @@ exports.unzip = function(zip_filename, dest_folder){
           var size = entry.size;
           if (fileName) {
             console.log(fileName);
+            if(type == "File"){
+              filename_list.push(fileName);
+              entry.pipe(fs.createWriteStream(path.join(dest_folder, fileName)));
+            }
+            
+          } else {
+            entry.autodrain();
+          }
+        })
+        .on('error', function(err){
+          console.log(err);
+          reject(err);
+        })
+        .on('close', function(){
+          resolve(filename_list);
+        });
+    }    
+  );
+}
+
+exports.unzipSource = function(zip_filename, dest_folder){
+  return new Promise(
+    function(resolve, reject){
+      var filename_list = [];
+      fs.createReadStream(zip_filename)
+        .pipe(unzip.Parse())
+        .on('entry', function (entry) {
+          var fileName = entry.path;
+          var type = entry.type; // 'Directory' or 'File'
+          var size = entry.size;
+          if (fileName) {
+            console.log(fileName);
             if(type != "File"){
               reject("You cannot contain sub-folder in your zip file.");
               return;

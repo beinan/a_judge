@@ -68,9 +68,44 @@ app.use(connectAssets({
 }));
 app.use(logger('dev'));
 app.use(favicon(path.join(__dirname, 'public/favicon.png')));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({ dest: path.join(__dirname, 'uploads') }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ extended: true ,limit: '50mb'}));
+app.use(multer({ 
+  dest: path.join(__dirname, 'uploads'),
+  onFileUploadStart: function (file) {
+    console.log('Upload starting for filename: ' + file.originalname);
+ },
+  onFileUploadData: function (file, data) {
+    console.log(data.length + ' of ' + file.fieldname + ' arrived');
+  },
+  onParseStart: function () {
+    console.log('Form parsing started at: ', new Date());
+  },
+  onParseEnd: function (req, next) {
+    console.log('Form parsing completed at: ', new Date());
+    next();
+  },
+  onFileUploadComplete: function (file) {
+    console.log(file.fieldname + ' uploaded to  ' + file.path);
+  },
+  onFileSizeLimit: function (file) {
+    console.log('Failed: ', file.originalname);
+    fs.unlink('./' + file.path) ;// delete the partially written file
+  },
+  onFilesLimit: function () {
+    console.log('Crossed file limit!');
+  },
+  onFieldsLimit: function () {
+    console.log('Crossed fields limit!');
+  },
+  onPartsLimit: function () {
+    console.log('Crossed parts limit!');
+  },
+  onError: function(error, next) {
+    console.log("Error occurred while uploading the file!!");
+    next(error);
+  }
+}));
 app.use(expressValidator());
 app.use(methodOverride());
 app.use(cookieParser());
