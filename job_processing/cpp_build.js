@@ -26,7 +26,6 @@ exports.grade = function(submission){
           var test = submission.assignment.testcases[testcase_index];
           console.log("grade test:", test);
           var grader_promise = grade_test(path.join(submission.folder,"build"), submission.assignment.assign_num, test.num)
-            .then(parseXmlString)
             .then(function(result){
               result.test_case = test.num;
               result.points = result.passed?test.points:0;
@@ -38,6 +37,7 @@ exports.grade = function(submission){
             })
             .catch(function(err){
               console.log(err);
+              reduce(testcase_index + 1);
             });
           
         }else{
@@ -74,14 +74,44 @@ exports.grade = function(submission){
 
 
 function grade_test(build_folder, assign_num, testcase_num){
-  return exec("docker run --cpuset-cpus=\"0,1\" -v " + build_folder 
-              + ":/ads/ cppgrader /CppGrader " + assign_num + " " + testcase_num + " /ads/a.out", {timout: 120000,killSignal: 'SIGKILL'});
+  return new Promise(
+    function(resolve, reject){
+      var killed = false;
+      var timeout_id = setTimeout(function(){
+        //kill and remove all existing docker containers
+        exec("docker kill $(docker ps -q) && docker rm $(docker ps -a -q)");
+        resolve({passed:false, err_msg:"Time out"}); //timeout 
+      }, 30000);
+      var run_grader =  function(){
+        exec("docker run --cpuset-cpus=\"0,1\" -v " + build_folder 
+             + ":/ads/ cppgrader /CppGrader " + assign_num + " " + testcase_num + " /ads/a.out", {timout: 120000,killSignal: 'SIGKILL'})
+          .then(function(data){
+            if(!killed){
+              clearTimeout(timeout_id);
+              parseXmlString(data).then(function(result){
+                resolve(result);
+              });
+            }else{
+              resolve({passed:false, err_msg:"Time out."});
+            }
+          });
+      };
+      exec("docker kill $(docker ps -q)") //clear running docker containers.
+        .then(run_grader).catch(run_grader);
+      
+    }
+  );
+  
 }
 
 function parseXmlString(xml){
   return new Promise(
     function(resolve, reject){
       parseString(xml, function (err, result) {
+        if(err){
+          reject(err);
+        }
+        
         var test_result = result.root.results[0].result[0];
         var passed = test_result.passed[0] == '1'? true:false;
         var error_msg = test_result.error_message[0];

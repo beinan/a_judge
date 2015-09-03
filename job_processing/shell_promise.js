@@ -8,10 +8,10 @@ exports.exec = function(cmd, options){
       console.log("start exec command", cmd, options);
      
       var child_process = exec(cmd, options, function (err) {
-        console.log("finish command", cmd, options);
+        console.log("finish command", cmd, options, err);
       
         if (err) {
-           return reject(output);
+           return reject(err);
          }
          return resolve(output);
       });
