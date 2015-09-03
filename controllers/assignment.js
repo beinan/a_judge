@@ -33,7 +33,7 @@ exports.downloadSkeleton = function(req, res){
     }if (!assignment.skeleton_path){
       res.status(404).json({msg:"Not found"});
     }else{
-      res.download(assignment.skeleton_path);
+      res.download(assignment.skeleton_path, "hw" + assign_num + ".zip");
     }
   }); 
 }
