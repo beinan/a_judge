@@ -12,7 +12,7 @@
 #include "Grader02.h"
 
 
-const TestCaseInfo Grader02::kTestCases[kTestCasesSize] = {
+const TestCaseInfo2 Grader02::kTestCases[kTestCasesSize] = {
     { 7, "workload1 small ascending", "workload1_small_ascending.bin", &Grader02::testWorkload1 },
     { 7, "workload1 small descending", "workload1_small_descending.bin", &Grader02::testWorkload1},
     { 7, "workload1 small random", "workload1_small_random.bin", &Grader02::testWorkload1 },

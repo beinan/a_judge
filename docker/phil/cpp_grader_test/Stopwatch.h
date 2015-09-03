@@ -1,7 +1,7 @@
 #ifndef STOPWATCH_H
 #define STOPWATCH_H
 
-#if (defined __linux || defined __APPLE_CC__)
+#if (defined linux || defined __APPLE_CC__)
 #include "UnixStopwatch.h"
 #else
 #include "WindowsStopwatch.h"
@@ -16,7 +16,7 @@ public:
   void unpause();
   long getTime();
 private:
-#if (defined __linux || defined __APPLE_CC__)
+#if (defined linux || defined __APPLE_CC__)
   UnixStopwatch m_Base;
 #else
   WindowsStopwatch m_Base;

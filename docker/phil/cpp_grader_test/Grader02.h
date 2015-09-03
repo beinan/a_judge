@@ -9,13 +9,13 @@
 
 class Grader02;
 
-typedef TestCase* (Grader02::*TestFunc)(int);
+typedef TestCase* (Grader02::*TestFunc2)(int);
 
-struct TestCaseInfo {
+struct TestCaseInfo2 {
   int point;
   std::string description;
   std::string test_file;
-  TestFunc test_func;
+  TestFunc2 test_func;
 };
 
 class Grader02 : public AbstractGrader {
@@ -36,5 +36,5 @@ private:
                    std::vector<int>& sorted);
 
   static const int kTestCasesSize = 14;
-  static const TestCaseInfo kTestCases[kTestCasesSize];
+  static const TestCaseInfo2 kTestCases[kTestCasesSize];
 };

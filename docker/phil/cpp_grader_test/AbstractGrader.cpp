@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <set>
+#include <fstream>
 
 #ifdef linux
 #include <dlfcn.h>
@@ -58,67 +59,51 @@ bool AbstractGrader::valuesEqual(IVectorString * user_values,
   return true;
 }
 
-bool AbstractGrader::VectorsEqual(IVectorKeyValue * user_vec,
-                  std::vector<std::pair<int, std::string> > gold_vec){
-  if(user_vec->size() != gold_vec.size())
-    return false;
-
-  for(int i = 0; i < gold_vec.size(); ++i){
-    if(user_vec->get(i)->getKey() != gold_vec[i].first ||
-        user_vec->get(i)->getValue() != gold_vec[i].second)
-      return false;
+void AbstractGrader::loadBinarySequence(std::string filename, std::vector<std::pair<int, int> >& seq){
+  std::ifstream fin(filename.c_str(), std::ios::binary);
+  if(fin.good() == false){
+    return;
   }
-
-  return true;
+  size_t len;
+  fin.read((char *) &len, sizeof(size_t));
+  for(size_t i = 0; i < len; ++i){
+    int first;
+    int second;
+    fin.read((char *) &first, sizeof(int));
+    fin.read((char *) &second, sizeof(int));
+    seq.push_back(std::pair<int, int>(first, second));
+  }
+  fin.close();
 }
 
-void AbstractGrader::createVector(std::vector<int>& input, std::vector<int>& sorted,
-                                  int order, int len, bool duplicates)
-{
-  Random random;
-  std::vector<int> counts;
-  if(duplicates){
-    for(int i = 0; i < len / 2; ++i){
-      counts.push_back(1);
-    }
-    for(int i = 0; i < len / 4; ++i){
-      counts.push_back(2);
-    }
-    for(int i = 0; i < len / 8; ++i){
-      counts.push_back(3);
-    }
-    for(int i = 0; i < len / 16; ++i){
-      counts.push_back(4);
-    }
-    for(int i = 0; i < len / 32; ++i){
-      counts.push_back(5);
-    }
-    std::random_shuffle(counts.begin(), counts.end());
-    for(int i = 0; i < len; ++i){
-      int count = 1;
-      if(i < counts.size()){
-        count = counts[i];
-      }
-      for(int j = 0; j < count && sorted.size() < len; ++j){
-        sorted.push_back(i);
-      }
-    }
-  } else {
-    for(int i = 0; i < len; ++i){
-      sorted.push_back(i);
-    }
+void AbstractGrader::loadBinarySequence(std::string filename, std::vector<double>& seq){
+  std::ifstream fin(filename.c_str(), std::ios::binary);
+  if(fin.good() == false){
+    return;
   }
-
-
-  if(order == 0){
-    input = sorted;
-  } else if(order == 1){
-    input = sorted;
-    std::reverse(input.begin(), input.end());
-  } else {
-    input = sorted;
-    std::random_shuffle(input.begin(), input.end());
+  size_t len;
+  fin.read((char *) &len, sizeof(size_t));
+  for(size_t i = 0; i < len; ++i){
+    double value;
+    fin.read((char *) &value, sizeof(double));
+    seq.push_back(value);
   }
+  fin.close();
+}
+
+void AbstractGrader::loadBinarySequence(std::string filename, std::vector<int>& seq){
+  std::ifstream fin(filename.c_str(), std::ios::binary);
+  if(fin.good() == false){
+    return;
+  }
+  size_t len;
+  fin.read((char *) &len, sizeof(size_t));
+  for(size_t i = 0; i < len; ++i){
+    int value;
+    fin.read((char *) &value, sizeof(int));
+    seq.push_back(value);
+  }
+  fin.close();
 }
 
 void AbstractGrader::print(IVectorKeyValue * vector){
@@ -164,6 +149,48 @@ bool AbstractGrader::sortedEqual(IVectorKeyValue * user_sorted,
   return true;
 }
 
+bool AbstractGrader::vectorEqual(std::vector<double>& lhs, std::vector<double>& rhs){
+  if(lhs.size() != rhs.size()){
+    return false;
+  }
+  for(size_t i = 0; i < lhs.size(); ++i){
+    double lhs_value = lhs[i];
+    double rhs_value = rhs[i];
+    if(lhs_value != rhs_value){
+      return false;
+    }
+  }
+  return true;
+}
+
+bool AbstractGrader::vectorEqual(std::vector<int>& lhs, std::vector<int>& rhs){
+  if(lhs.size() != rhs.size()){
+    return false;
+  }
+  for(size_t i = 0; i < lhs.size(); ++i){
+    int lhs_value = lhs[i];
+    int rhs_value = rhs[i];
+    if(lhs_value != rhs_value){
+      return false;
+    }
+  }
+  return true;
+}
+
+bool AbstractGrader::VectorsEqual(IVectorKeyValue * user_vec,
+                  std::vector<std::pair<int, std::string> > gold_vec){
+  if(user_vec->size() != gold_vec.size())
+    return false;
+
+  for(int i = 0; i < gold_vec.size(); ++i){
+    if(user_vec->get(i)->getKey() != gold_vec[i].first ||
+        user_vec->get(i)->getValue() != gold_vec[i].second)
+      return false;
+  }
+
+  return true;
+}
+
 std::string AbstractGrader::randomValue()
 {
   std::string ret = "";
@@ -202,6 +229,55 @@ void AbstractGrader::viewVector(std::vector<int>& input,
   for(int i = 0; i < len; ++i){
     int index = indices[i];
     output.push_back(input[index]);
+  }
+}
+
+void AbstractGrader::createVector(std::vector<int>& input, std::vector<int>& sorted, 
+  int order, int len, bool duplicates)
+{
+  Random random;
+  std::vector<int> counts;
+  if(duplicates){
+    for(int i = 0; i < len / 2; ++i){
+      counts.push_back(1);
+    }
+    for(int i = 0; i < len / 4; ++i){
+      counts.push_back(2);
+    }
+    for(int i = 0; i < len / 8; ++i){
+      counts.push_back(3);
+    }
+    for(int i = 0; i < len / 16; ++i){
+      counts.push_back(4);
+    }
+    for(int i = 0; i < len / 32; ++i){
+      counts.push_back(5);
+    }
+    std::random_shuffle(counts.begin(), counts.end());  
+    for(int i = 0; i < len; ++i){
+      int count = 1;
+      if(i < counts.size()){
+        count = counts[i];
+      }
+      for(int j = 0; j < count && sorted.size() < len; ++j){
+        sorted.push_back(i);
+      }
+    } 
+  } else {
+    for(int i = 0; i < len; ++i){
+      sorted.push_back(i);
+    }
+  }
+
+
+  if(order == 0){
+    input = sorted;
+  } else if(order == 1){
+    input = sorted;
+    std::reverse(input.begin(), input.end());
+  } else {
+    input = sorted;
+    std::random_shuffle(input.begin(), input.end());
   }
 }
 

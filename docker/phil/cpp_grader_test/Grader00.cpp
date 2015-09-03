@@ -76,7 +76,7 @@ int Grader00::getPoints(int test_case){
 }
 
 Date Grader00::getDueDate(){
-  return Date(1, 1, 2011);
+  return Date(9, 5, 2013);
 }
 
 TestCase * Grader00::grade(int index){

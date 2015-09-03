@@ -5,7 +5,7 @@
 // http://www.lcs.syr.edu/faculty/fawcett/handouts/CSE687/code/HiResTimerNativeCpp/HiResTimer.cpp
 // http://www.lcs.syr.edu/faculty/fawcett/handouts/CSE687/code/HiResTimerNativeCpp/HiResTimer.h
 //
-#ifdef __linux
+#ifdef linux
 #elif defined __APPLE_CC__
 #else
 

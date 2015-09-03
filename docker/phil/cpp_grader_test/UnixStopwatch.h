@@ -1,7 +1,7 @@
 #ifndef UNIX_STOPWATCH_H
 #define UNIX_STOPWATCH_H
 
-#if (defined __linux || defined __APPLE_CC__)
+#if (defined linux || defined __APPLE_CC__)
 
 #include <sys/time.h>
 

@@ -9,7 +9,7 @@
 #include "WindowsStopwatch.h"
 #include <exception>
 
-#ifdef __linux
+#ifdef linux
 #elif defined __APPLE_CC__
 #else
 

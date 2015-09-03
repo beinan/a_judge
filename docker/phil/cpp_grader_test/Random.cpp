@@ -35,3 +35,24 @@ void Random::randomVector(int size, std::vector<int>& output)
     }
   }
 }
+
+void Random::randomVector(int size, vector<double>& output)
+{
+  std::vector<double> choices;
+  for(int i = 0; i < size + 5; ++i){
+    choices.push_back(i);
+  }
+
+  for(int i = 0; i < size; ++i){
+    int index = nextInt(choices.size());
+    double value = choices[index];
+    output.push_back(value);
+    if((size_t) index == choices.size() - 1){
+      choices.pop_back();
+    } else {
+      int last = choices[choices.size() - 1];
+      choices[index] = last;
+      choices.pop_back();
+    }
+  }
+}

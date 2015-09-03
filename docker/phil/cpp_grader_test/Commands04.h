@@ -20,6 +20,31 @@ struct AVLTreeCmd {
   int output;
 };
 
+struct RTreePoint {
+  int x;
+  int y;
+
+  bool operator<(const RTreePoint& rhs) const {
+    if(x < rhs.x){
+      return true;
+    } else if(x > rhs.x){
+      return false;
+    } else if(y < rhs.y){
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
+
+struct RTreeCmd {
+  int top_left_x;
+  int top_left_y;
+  int bottom_right_x;
+  int bottom_right_y;
+  std::set<RTreePoint> found;
+};
+
 struct BTreeCmd {
   int action;
   int input;
@@ -30,6 +55,12 @@ class Commands04 {
 public:
   void loadAVLTreeCommands(std::string cmds_filename, std::vector<AVLTreeCmd>& cmds);
   void saveAVLTreeCommands(std::string cmds_filename, std::vector<AVLTreeCmd>& cmds);
+
+  void loadRTreePoints(std::string filename, std::vector<RTreePoint>& points);
+  void saveRTreePoints(std::string filename, std::vector<RTreePoint>& points);
+
+  void loadRTreeCommands(std::string filename, std::vector<RTreeCmd>& cmds);
+  void saveRTreeCommands(std::string filename, std::vector<RTreeCmd>& cmds);
 
   void loadBTreeCommands(std::string cmds_filename, std::vector<BTreeCmd>& cmds);
   void saveBTreeCommands(std::string cmds_filename, std::vector<BTreeCmd>& cmds);

@@ -1,6 +1,6 @@
 #include "UnixStopwatch.h"
 
-#if (defined __linux || defined __APPLE_CC__)
+#if (defined linux || defined __APPLE_CC__) 
 UnixStopwatch::UnixStopwatch(){
   gettimeofday(&m_StartTime, 0);
 }
