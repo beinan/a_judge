@@ -5,9 +5,12 @@ exports.exec = function(cmd, options){
   return new Promise(
     function(resolve, reject){
       var output = '';
+      console.log("start exec command", cmd, options);
+     
       var child_process = exec(cmd, options, function (err) {
-         console.log("exec command", cmd, options);
-         if (err) {
+        console.log("finish command", cmd, options);
+      
+        if (err) {
            return reject(output);
          }
          return resolve(output);

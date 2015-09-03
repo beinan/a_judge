@@ -75,7 +75,7 @@ exports.grade = function(submission){
 
 function grade_test(build_folder, assign_num, testcase_num){
   return exec("docker run --cpuset-cpus=\"0,1\" -v " + build_folder 
-              + ":/ads/ cppgrader /CppGrader " + assign_num + " " + testcase_num + " /ads/a.out", {timout: 120000});
+              + ":/ads/ cppgrader /CppGrader " + assign_num + " " + testcase_num + " /ads/a.out", {timout: 120000,killSignal: 'SIGKILL'});
 }
 
 function parseXmlString(xml){
