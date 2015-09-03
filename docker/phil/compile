@@ -1,3 +1,0 @@
-#!/bin/sh
-
-g++ -ggdb -DGRADE_SERVER -o CppGrader *.cpp -ldl -lpthread
