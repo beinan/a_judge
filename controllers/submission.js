@@ -92,9 +92,10 @@ exports.regrade = function(req, res){
         res.json(doc);
       })
       .catch(function(err){
-        console.log(err);
+        console.log(err, err[0], err[0].stack);
 
         res.status(500).json(err);
+        
       });
     }  
   });
@@ -115,10 +116,8 @@ function build_user_solution(file, assignment, owner){
   return fsp.mkdirp(build_folder)
     .then(fsp.move.bind(null, file.path, final_zip_filename))  //move uploaded solution to the user's folder
     .then(fsp.unzipSource.bind(null,final_zip_filename, source_folder))  //unzip file
-    .then(function(filename_list){  //build
-      //console.log(filename_list);  
-      return cpp_builder.build(filename_list, source_folder, build_folder, output_filename);
-    })
+    .then(fsp.cppStlChecking.bind(null, source_folder, assignment.isVectorAllowed))
+    .then(cpp_builder.build.bind(null, source_folder, build_folder, output_filename))
     .then(fsp.checksum.bind(null, path.join(build_folder, output_filename)))  //get md5 checksum for duplication checking   
     .then(create_submission.bind(null,owner._id, assignment._id, source_folder))
     ;        

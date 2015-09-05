@@ -8,7 +8,7 @@ var parseString = require('xml2js').parseString;
 
 
 //build user solution
-exports.build = function(code_files, source_folder, build_folder, output_filename){
+exports.build = function(source_folder, build_folder, output_filename){
   var output = path.join(build_folder, output_filename);
   return exec("g++ -o " + output + " -fPIC -shared *.cpp -lpthread", {cwd: source_folder});                                           
 };

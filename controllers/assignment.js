@@ -89,7 +89,9 @@ exports.update = function(req, res) {
       res.json(assign);
   };
   Assignment.findByIdAndUpdate(data._id, { $set: { title: data.title, desc: data.desc, 
-                                                   isPublic: data.isPublic, date:moment(data.date).toDate()}}, 
+                                                   isPublic: data.isPublic, 
+                                                   isVectorAllowed: data.isVectorAllowed,
+                                                   date:moment(data.date).toDate()}}, 
                                {'new':true}
                                , cb);
 };

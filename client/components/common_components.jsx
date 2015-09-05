@@ -110,17 +110,20 @@ export class UploadFileForm extends React.Component{
       (data) => { //ajax request successed
         this.setState({status: 'success', msg: "Upload succeeded."}); 
         console.log("upload successful",data);
-        this.setState({job_id: data.job_id});
+        //this.setState({job_id: data.job_id});
       },
       (jqXHR, textStatus, errorThrown) => { 
         //ajax request failed
-        console.log(jqXHR, textStatus, errorThrown);          
-        this.setState({status:'error', msg:jqXHR.responseJSON.msg});
+        alert("Submission failed.");
+        console.log(jqXHR, textStatus, errorThrown);
+        var msg = jqXHR.responseJSON.msg;
+        this.setState({status:'error', msg:msg});
       }
     );
   }
   render() {
     var job_output;
+   
     if(this.state.job_id){
       job_output = <JobOutput job_id ={this.state.job_id} />
     }

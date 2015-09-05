@@ -5,6 +5,7 @@ var assignmentSchema = new mongoose.Schema({
   title: String,
   desc: String,
   isPublic: Boolean,
+  isVectorAllowed: Boolean,
   testcases: [{ num: Number, points: Number, desc:String }],
   date: { type: Date, default: Date.now },
   skeleton_path: String

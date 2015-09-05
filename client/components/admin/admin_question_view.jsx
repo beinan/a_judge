@@ -49,6 +49,7 @@ class AdminQuestionView extends React.Component{
                desc: this.refs.desc_input.getValue(),
                date: this.refs.due_date_input.getValue(),
                isPublic: this.refs.is_pub_input.getChecked(),
+               isVectorAllowed:this.refs.is_vector_allowed_input.getChecked(),
                _id: this.state.currentAssign._id})
            .then((data)=>{
              alert("Assignment saved.");
@@ -69,6 +70,8 @@ class AdminQuestionView extends React.Component{
             <Input type='text' style={{color:"black"}} defaultValue={this.state.currentAssign?this.state.currentAssign.title:""} ref='title_input' label='Title'/>
             <Input type='text' style={{color:"black"}} defaultValue={this.state.currentAssign?moment(this.state.currentAssign.date).format():""} ref='due_date_input' label='Due Date'/>
             <Input type='checkbox' label='Public' defaultChecked={this.state.currentAssign?this.state.currentAssign.isPublic:false} ref="is_pub_input"/> 
+            <Input type='checkbox' label='Is std::vector allowed' defaultChecked={this.state.currentAssign?this.state.currentAssign.isVectorAllowed:false} ref="is_vector_allowed_input"/> 
+
             <Input type='textarea' style={{color:"black"}} defaultValue={this.state.currentAssign?this.state.currentAssign.desc:""} ref='desc_input' label='Description'/>
             <Button bsStyle='primary' onClick={save_assignment}>Save changes</Button>
             <UploadFileForm title="Upload code skeleton." 

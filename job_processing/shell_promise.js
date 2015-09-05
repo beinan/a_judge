@@ -11,7 +11,7 @@ exports.exec = function(cmd, options){
         console.log("finish command", cmd, options, err);
       
         if (err) {
-           return reject(err);
+           return reject(output);
          }
          return resolve(output);
       });
