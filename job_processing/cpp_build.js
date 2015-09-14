@@ -18,26 +18,33 @@ exports.buildCppGrader = function(source_folder){
   return exec("g++ -ggdb -DGRADE_SERVER -o CppGrader *.cpp -ldl -lpthread", {cwd: source_folder});                                           
 };
 
+
+
 exports.grade = function(submission){
   return new Promise(
     function(resolve, reject){
+      var add_result = function(submission, test, testcase_index, result){
+        result.test_case = test.num;
+        result.points = result.passed?test.points:0;
+        result.runtime = result.runtime?result.runtime: 0;
+        result.desc = test.desc;
+        submission.results.push(result);
+        submission.total_score = submission.total_score + result.points;
+        submission.total_runtime = submission.total_runtime + result.runtime;
+        reduce(testcase_index + 1);
+        
+      };
       var reduce = function(testcase_index){
         if(testcase_index < submission.assignment.testcases.length){
           var test = submission.assignment.testcases[testcase_index];
           console.log("grade test:", test);
           var grader_promise = grade_test(path.join(submission.folder,"build"), submission.assignment.assign_num, test.num)
             .then(function(result){
-              result.test_case = test.num;
-              result.points = result.passed?test.points:0;
-              result.desc = test.desc;
-              submission.results.push(result);
-              submission.total_score = submission.total_score + result.points;
-              submission.total_runtime = submission.total_runtime + result.runtime;
-              reduce(testcase_index + 1);
+              add_result(submission, test, testcase_index, result);
             })
             .catch(function(err){
-              console.log(err);
-              reduce(testcase_index + 1);
+              console.log("grading exec error", err);              
+              add_result(submission, test, testcase_index, {passed: false, err_msg: "segment fault or unknown error." + err});
             });
           
         }else{
@@ -90,10 +97,14 @@ function grade_test(build_folder, assign_num, testcase_num){
               clearTimeout(timeout_id);
               parseXmlString(data).then(function(result){
                 resolve(result);
+              }).catch(function(e){
+                reject(e);
               });
             }else{
               resolve({passed:false, err_msg:"Time out."});
             }
+          }).catch(function(e){
+            reject(e);
           });
       };
       exec("docker kill $(docker ps -q)") //clear running docker containers.
