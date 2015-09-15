@@ -85,15 +85,14 @@ exports.unzipSource = function(zip_filename, dest_folder){
           var fileName = entry.path;
           var type = entry.type; // 'Directory' or 'File'
           var size = entry.size;
-          //console.log(fileName);
+          console.log(fileName);
           if(type != "File"){
             reject("You cannot contain sub-folder in your zip file.");
-            return;
+            this.emit('end');
           }else if(path.extname(fileName) != ".cpp" && path.extname(fileName) != ".h"){
             reject("You cannot contain files other than '*.cpp' and '*.h'");
-            return;
-          }
-          if( !isFileIgnored(fileName)){
+            this.emit('end');
+          }else if( !isFileIgnored(fileName) && fileName.indexOf('/') == -1 && fileName.indexOf('\\')){
             filename_list.push(fileName);
             entry.pipe(fs.createWriteStream(path.join(dest_folder, fileName)));
           }
@@ -126,6 +125,7 @@ exports.readFile = function(filename){
   
 };
 exports.cppStlChecking = function(source_folder, is_vector_allowed, filename_list){
+  //console.log("stl checking");
   var checking_promises = [];
   for(var i in filename_list){
     var filename = path.join(source_folder, filename_list[i]);

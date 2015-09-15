@@ -75,7 +75,7 @@ exports.upload = function(req, res){
           .catch(function(err){        
             console.log(err);
             res.status(500).json({status:'error', msg:err});
-            throw err;
+            
           });
       }
     });
@@ -92,7 +92,7 @@ exports.regrade = function(req, res){
         res.json(doc);
       })
       .catch(function(err){
-        console.log(err, err[0], err[0].stack);
+//        console.log(err, err[0], err[0].stack);
 
         res.status(500).json(err);
         
