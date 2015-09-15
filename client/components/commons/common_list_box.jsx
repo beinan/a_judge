@@ -23,6 +23,14 @@ class CommonListBox extends React.Component{
   componentWillUnmount() {
     this.store.removeUpdateEventListener(this._onChange);
   }
+  
+  componentWillReceiveProps(nextProps){
+    this.store.removeUpdateEventListener(this._onChange);
+    this.store = getOrCreateListStore(nextProps.store_id, nextProps.url, nextProps.page_size);
+    this.state = this.store.getData();
+    this.store.addUpdateEventListener(this._onChange);
+   
+  }
 
   _onChange() {
     this.setState(this.store.getData());

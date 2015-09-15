@@ -6,6 +6,7 @@ import ViewType from '../view_type.js'
 
 import AdminQuestionView from './admin/admin_question_view.jsx'
 import AdminMonitorView from './admin/admin_monitor_view.jsx'
+import AdminGradesView from './admin/admin_grades_view.jsx'
 
 import AssignmentView from './student_views/assignment_view.jsx'
 import StudentGradeView from './student_views/student_grade_view.jsx'
@@ -16,7 +17,8 @@ var view_map = {
   [ViewType.STUDENT_GRADE_VIEW]: <StudentGradeView/>,
   [ViewType.STUDENT_SUBMISSION_VIEW]: <StudentSubmissionView/>,
   [ViewType.ADMIN_QUESTION_VIEW]: <AdminQuestionView/>,
-  [ViewType.ADMIN_MONITOR_VIEW]: <AdminMonitorView/>
+  [ViewType.ADMIN_MONITOR_VIEW]: <AdminMonitorView/>,
+  [ViewType.ADMIN_GRADE_VIEW]: <AdminGradesView/>
 
 };
 

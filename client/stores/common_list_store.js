@@ -90,7 +90,7 @@ AppDispatcher.register(function(action) {
 });
 
 
-var _stores = {};
+let _stores = {};
 
 function getOrCreateListStore(store_id, url, page_size){
   if(!_stores[store_id])

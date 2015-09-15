@@ -9,6 +9,7 @@ var cpp_builder = require('../job_processing/cpp_build.js');
 
 var Submission = require('../models/Submission');
 var Assignment = require('../models/Assignment');
+var User = require('../models/User');
 
 var secrets = require('../config/secrets');
 
@@ -55,6 +56,54 @@ exports.myGrades = function(req, res) {
           
 };
 
+exports.assignmentGrades = function(req, res){
+  var assign_num = req.params.assign_num;
+  console.log(assign_num);
+  Assignment.findOne({assign_num: assign_num}, function(err, assignment){
+    if(err || !assignment){
+      res.status(400).json({status:'error', msg:"Assignment does not exist or DB error."});
+    }else{
+      getAllGradeForAssign(assignment._id)
+        .then(function(grades){
+          console.log(grades);
+          grades.sort(function(a, b){
+            return b.score - a.score;
+          });
+          res.json(grades);
+        })
+        .catch(function(e){
+          res.status(500).json(e);
+        });
+    }
+  });
+};
+
+function getAllGradeForAssign(assign_id){
+  var stream = User.find().stream();
+  var grades = [];
+  return new Promise(function(resolve, reject){
+    stream.on('data', function (user) {
+      this.pause();
+      var self = this;
+      Submission.find({owner:user.id, assignment:assign_id}).sort({final_score:-1}).limit(1).exec(function(err,doc){
+        console.log(doc);
+        if(doc.length){
+          grades.push({name: user.profile.name, email: user.email, score: doc[0].final_score});
+          
+        }  
+        self.resume();        
+      });
+    }).on('error', function (err) {
+      console.log("error during build actor and signals streaming", err);
+      reject(err);
+    }).on('close', function () {
+   
+      resolve(grades);
+    });
+
+  });
+  
+}
 
 exports.upload = function(req, res){
 

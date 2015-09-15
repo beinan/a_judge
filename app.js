@@ -261,6 +261,8 @@ app.get('/admin/promote/:id', userController.promote);
  
 app.get('/admin/demote/:id', userController.demote);
 
+app.get('/admin/assign_grades/:assign_num', submissionController.assignmentGrades);
+
 
 app.get('/admin/api/jobs', jobController.allJobs);
 app.get('/admin/api/submissions', submissionController.allSubmissions);

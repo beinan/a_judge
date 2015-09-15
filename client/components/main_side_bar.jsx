@@ -93,7 +93,8 @@ class MainSideBar extends React.Component{
       admin_menus = this.state.isAdmin?[
         <li className="header" key="admin_menu_section">Admin Menu</li>, 
         <MenuItem key="admin_questions" view_name={ViewType.ADMIN_QUESTION_VIEW} title="Admin Questions" />,
-        <MenuItem key="admin_monitor" view_name={ViewType.ADMIN_MONITOR_VIEW} title="Monitor" />
+        <MenuItem key="admin_monitor" view_name={ViewType.ADMIN_MONITOR_VIEW} title="Monitor" />,
+        <MenuItem key="admin_grades" view_name={ViewType.ADMIN_GRADE_VIEW} title="Grades" />
       ]:null
       sideBarMenu = (
           <ul className="sidebar-menu">
