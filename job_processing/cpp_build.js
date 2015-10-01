@@ -86,7 +86,7 @@ function grade_test(build_folder, assign_num, testcase_num){
       var killed = false;
       var timeout_id = setTimeout(function(){
         //kill and remove all existing docker containers
-        exec("docker kill $(docker ps -q) && docker rm $(docker ps -a -q)");
+        exec("docker kill $(docker ps | awk '{ print $1,$2 }' | grep cppgrader | awk '{print $1 }') && docker rm $(docker ps -a | awk '{ print $1,$2 }' | grep cppgrader | awk '{print $1 }')");
         resolve({passed:false, err_msg:"Time out"}); //timeout 
       }, 30000);
       var run_grader =  function(){
@@ -107,7 +107,7 @@ function grade_test(build_folder, assign_num, testcase_num){
             reject(e);
           });
       };
-      exec("docker kill $(docker ps -q)") //clear running docker containers.
+      exec("docker kill $(docker ps | awk '{ print $1,$2 }' | grep cppgrader | awk '{print $1 }')") //clear running docker containers.
         .then(run_grader).catch(run_grader);
       
     }
