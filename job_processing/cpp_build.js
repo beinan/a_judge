@@ -88,7 +88,7 @@ function grade_test(build_folder, assign_num, testcase_num){
         //kill and remove all existing docker containers
         exec("docker kill $(docker ps | awk '{ print $1,$2 }' | grep cppgrader | awk '{print $1 }') && docker rm $(docker ps -a | awk '{ print $1,$2 }' | grep cppgrader | awk '{print $1 }')");
         resolve({passed:false, err_msg:"Time out"}); //timeout 
-      }, 30000);
+      }, 60000);  //docker container will be killed after 60 seconds
       var run_grader =  function(){
         exec("docker run --cpuset-cpus=\"0,1\" -v " + build_folder 
              + ":/ads/ cppgrader /CppGrader " + assign_num + " " + testcase_num + " /ads/a.out", {timout: 120000,killSignal: 'SIGKILL'})

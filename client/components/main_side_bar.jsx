@@ -108,7 +108,12 @@ class MainSideBar extends React.Component{
                 <span>Forum</span>
               </a>
             </li>           
-            
+            <li>
+              <a href="/account">
+                <i className='fa fa-link'></i> 
+                <span>My Account</span>
+              </a>
+            </li>           
             {admin_menus}    
           </ul>
       );
