@@ -176,7 +176,6 @@ cancel.on('press', function() {
 
 });
 
-
 var emailForm = blessed.form({
   mouse: true,
   keys: true,

@@ -103,17 +103,18 @@ class MainSideBar extends React.Component{
             <MenuItem view_name={ViewType.STUDENT_SUBMISSION_VIEW} title="My Submissions" />
             <MenuItem view_name={ViewType.STUDENT_GRADE_VIEW} title="My Grades" />
             <li>
+              <a href="/account">
+                <i className='fa fa-link'></i> 
+                <span>My Account</span>
+              </a>
+            </li>
+            <li>
               <a href="/forum">
                 <i className='fa fa-link'></i> 
                 <span>Forum</span>
               </a>
             </li>           
-            <li>
-              <a href="/account">
-                <i className='fa fa-link'></i> 
-                <span>My Account</span>
-              </a>
-            </li>           
+                       
             {admin_menus}    
           </ul>
       );
