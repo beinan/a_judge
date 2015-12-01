@@ -53,7 +53,7 @@ class AdminGradesView extends React.Component{
                            data_mapper={(d)=>[d.assign_num, view_grades_btn(d)]}
                            store_id="admin_assignment_list" page_size={20} />
       
-            <CommonListBox title={"Grades of Assignment:"+this.state.assign_num} url={"/admin/assign_grades/"+ this.state.assign_num} headers= {["name", "email", "score", "runtime"]}
+            <CommonListBox title={"Grades of Assignment:"+this.state.assign_num} url={"/admin/assign_grades/"+ this.state.assign_num} headers= {["name", "email", "score"]}
                            data_mapper={(d)=>[d.name, d.email, d.score, d.runtime]}
                            store_id={"admin_grades_list" + this.state.assign_num} page_size={200} />
               
