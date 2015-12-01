@@ -67,7 +67,10 @@ exports.assignmentGrades = function(req, res){
         .then(function(grades){
           console.log(grades);
           grades.sort(function(a, b){
-            return b.score - a.score;
+            if(b.score != a.score)
+              return b.score - a.score;
+            return a.runtime - b.runtime;
+            
           });
           res.json(grades);
         })
@@ -88,7 +91,7 @@ function getAllGradeForAssign(assign_id){
       Submission.find({owner:user.id, assignment:assign_id}).sort({final_score:-1}).limit(1).exec(function(err,doc){
         console.log(doc);
         if(doc.length){
-          grades.push({name: user.profile.name, email: user.email, score: doc[0].final_score});
+          grades.push({name: user.profile.name, email: user.email, score: doc[0].final_score, runtime: doc[0].total_runtime});
           
         }  
         self.resume();        
@@ -97,7 +100,7 @@ function getAllGradeForAssign(assign_id){
       console.log("error during build actor and signals streaming", err);
       reject(err);
     }).on('close', function () {
-   
+      
       resolve(grades);
     });
 
